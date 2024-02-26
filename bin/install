@@ -3,6 +3,38 @@
 set -e
 set -o pipefail
 
+get_binary_path_in_archive() {
+  local archive_dir=$1
+  local binary_name=$2
+  local version=$3
+  local platform=$4
+
+  echo "${archive_dir}/${binary_name}_${platform}/$binary_name"
+}
+
+get_platform() {
+  echo "$(uname | tr '[:upper:]' '[:lower:]')-amd64"
+}
+
+get_filename() {
+  #local version="$1"
+  local platform="$2"
+  local binary_name="$3"
+
+  echo "${binary_name}_${platform}.tar.gz"
+}
+
+get_download_url() {
+  local version="$1"
+  local platform="$2"
+  local binary_name="$3"
+  local filename
+  filename="$(get_filename "$version" "$platform" "$binary_name")"
+
+  # https://github.com/Ladicle/kubectl-rolesum/releases/download/v1.5.5/kubectl-rolesum_darwin-amd64.tar.gz
+  echo "https://github.com/Ladicle/kubectl-rolesum/releases/download/v${version}/${filename}"
+}
+
 install_tool() {
   #local install_type=$1
   local version=$2
@@ -35,38 +67,6 @@ install_tool() {
   echo "Copying binary"
   cp "$(get_binary_path_in_archive "${tmp_download_dir}" "${binary_name}" "${version}" "${platform}")" "${binary_path}"
   chmod +x "${binary_path}"
-}
-
-get_binary_path_in_archive() {
-  local archive_dir=$1
-  local binary_name=$2
-  local version=$3
-  local platform=$4
-
-  echo "${archive_dir}/${binary_name}_${platform}/$binary_name"
-}
-
-get_platform() {
-  echo "$(uname | tr '[:upper:]' '[:lower:]')-amd64"
-}
-
-get_filename() {
-  #local version="$1"
-  local platform="$2"
-  local binary_name="$3"
-
-  echo "${binary_name}_${platform}.tar.gz"
-}
-
-get_download_url() {
-  local version="$1"
-  local platform="$2"
-  local binary_name="$3"
-  local filename
-  filename="$(get_filename "$version" "$platform" "$binary_name")"
-
-  # https://github.com/Ladicle/kubectl-bindrole/releases/download/v1.1.0/kubectl-bindrole_linux-amd64.tar.gz
-  echo "https://github.com/Ladicle/kubectl-rolesum/releases/download/${version}/${filename}"
 }
 
 tmp_download_dir="$(mktemp -d -t 'asdf_XXXXXXXX')"
