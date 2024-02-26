@@ -9,7 +9,12 @@
 ## Install
 
 ```bash
-asdf plugin-add kubectl-bindrole https://github.com/looztra/asdf-kubectl-bindrole
+asdf plugin-add kubectl-bindrole https://github.com/ageha734/asdf-kubectl-bindrole
+```
+
+```bash
+mise plugin remove kubectl-bindrole
+mise plugin add kubectl-bindrole https://github.com/ageha734/asdf-kubectl-bindrole
 ```
 
 ## Use
